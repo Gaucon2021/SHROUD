@@ -1,0 +1,1 @@
+import {test} from "node:test";import assert from "node:assert/strict";import {evaluate} from "./core.mjs";import fixture from "./fixture.mjs";test("synthetic scenario",()=>assert.equal(evaluate(fixture).decision,"REVIEW_REDACTED"));test("empty input fails safely",()=>assert.notEqual(evaluate({}).decision,"ALLOW"));
