@@ -14,3 +14,9 @@ jobs:
         with:
           persist-credentials: false
       - run: node --version && node --test
+      - name: Install pinned browser test client
+        run: npm install --prefix "$RUNNER_TEMP/ui-qa" --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.51.1
+      - name: Desktop and mobile browser smoke test
+        env:
+          QA_PLAYWRIGHT_ROOT: ${{ runner.temp }}/ui-qa
+        run: node scripts/ui-smoke.mjs
