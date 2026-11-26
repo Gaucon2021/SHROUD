@@ -3,8 +3,9 @@ export function prepare(document, mode, consent) {
   if(typeof document!=="string"||!document.trim()||document.length>12000) return {decision:"BLOCK",reason:"Invalid or oversized document"};
   if(mode==="device")return {decision:"DEVICE_ONLY",payload:document,findings:[]};
   if(mode!=="hybrid"||consent!==true)return {decision:"BLOCK",reason:"Explicit hybrid consent required"};
-  const patterns=[["SECRET",/\b(?:sk-|api[_-]?key\s*[:=]\s*|bearer\s+)[A-Za-z0-9_-]{8,}/gi],["EMAIL",/[\w.+-]+@[\w.-]+\.[a-z]{2,}/gi],["PHONE",/(?<!\d)(?:\+84|0)\d{9}(?!\d)/g],["CARD",/(?<!\d)(?:\d[ -]?){13,19}(?!\d)/g]];
-  let payload=document;const findings=[];
+  const patterns=[["SECRET",/(?:\b(?:sk-|gh[pousr]_|github_pat_|AIza)[A-Za-z0-9_-]{8,}|\b(?:api[_-]?key|access[_-]?token|password)\s*[:=]\s*["\x27]?[^\s"\x27,;]{8,}|\bbearer\s+[A-Za-z0-9._~-]{8,}|-----BEGIN [A-Z ]*PRIVATE KEY-----)/gi],["EMAIL",/[\w.+-]+@[\w.-]+\.[a-z]{2,}/gi],["PHONE",/(?<!\d)(?:\+84|0)(?:[ .-]?\d){9}(?!\d)/g],["CARD",/(?<!\d)(?:\d[ -]?){13,19}(?!\d)/g]];
+  // Normalize compatibility characters before cloud review, including full-width ASCII.
+  let payload=document.normalize("NFKC");const findings=[];
   for(const [type,pattern] of patterns){let count=0;payload=payload.replace(pattern,()=>"[REDACTED_"+type+"_"+(++count)+"]");if(count)findings.push({type,count});}
   if(findings.some(f=>f.type==="SECRET"))return {decision:"BLOCK",reason:"Possible secret detected",findings};
   return {decision:"REVIEW_REDACTED",payload,findings};
