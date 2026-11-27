@@ -16,6 +16,7 @@ The production domain https://shroud-mu.vercel.app/ has prefilled public web ide
 - Device-only: inspect synthetic input and run. Expect ON_DEVICE if supported.
 - Hybrid without consent: expect BLOCK.
 - Hybrid with consent: inspect the redacted preview and run. The SDK prefers local inference and can fall back to cloud. Only an actual IN_CLOUD result under this hybrid route demonstrates fallback.
+- Controlled fallback: open https://shroud-mu.vercel.app/fallback-test, connect SDK, explicitly consent, inspect the redacted preview and run. The page restricts the Prompt API and retains hybrid mode. Expect `REVIEW_REDACTED`, `IN_CLOUD`, `localModelAvailability: unavailable`. Download the receipt.
 - Redacted cloud: explicitly select cloud-only and consent, inspect and run. Expect IN_CLOUD. This is distinct from automatic fallback.
 - Download proof metadata before changing inputs or refreshing. The client receipt hashes the prompt, does not export raw input or output, and is unsigned.
 
