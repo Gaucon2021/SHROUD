@@ -16,7 +16,7 @@ The cloud-capable routes explicitly select Gemini 3.5 Flash-Lite. The browser SD
 
 ## Live evidence — 27 November 2026
 
-Three owner-provided browser receipts record hybrid-to-device, device-only-to-device, and explicit cloud-only-to-cloud inference. Recomputing SHA-256 from the synthetic fixture and fixed prompt independently confirms the prompt digests. Automatic hybrid fallback to cloud has **not** yet been observed; the cloud-only run is not a fallback run. Receipts are unsigned browser metadata, not independent attestations or network traffic audits.
+Four owner-provided browser receipts record hybrid-to-device, device-only-to-device, explicit cloud-only-to-cloud inference, and controlled automatic hybrid fallback to cloud. Recomputing SHA-256 from the synthetic fixture and fixed prompt independently confirms the prompt digests. The [controlled fallback page](https://shroud-mu.vercel.app/fallback-test) restricts the browser Prompt API using `Permissions-Policy: language-model=()`, retains `PREFER_ON_DEVICE`, and records `localModelAvailability: unavailable` and SDK-reported `IN_CLOUD`. This is distinct from the cloud-only route. Receipts are unsigned browser metadata, not independent attestations or network traffic audits.
 
 ## Run locally
 
