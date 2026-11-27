@@ -13,7 +13,7 @@ Target: 2 minutes 30 seconds, English subtitles, public YouTube video, no voiceo
 | 01:05–01:25 | Device receipt and download | The SDK reports ON_DEVICE. Export prompt integrity metadata. |
 | 01:25–01:40 | Hybrid, consent off, inspect | No cloud consent? SHROUD blocks the hybrid request. |
 | 01:40–02:00 | Hybrid, consent on, inspect | Review the redacted payload before allowing cloud-capable inference. |
-| 02:00–02:20 | Hybrid on unsupported local runtime, or explicitly labeled cloud-only run | Use the actual SDK-reported source. Never label explicit cloud-only as automatic fallback. |
+| 02:00–02:20 | Controlled fallback page, consent, inspect, run | Local model unavailable. Firebase hybrid inference automatically falls back to cloud. |
 | 02:20–02:30 | Receipt and GitHub | Reproduce prompt hashes. Keep inference provenance transparent. |
 
 ## Submission draft
@@ -22,7 +22,7 @@ Target: 2 minutes 30 seconds, English subtitles, public YouTube video, no voiceo
 
 **Description:** SHROUD is a privacy-aware hybrid AI workbench that gives users explicit control over whether a synthetic document is processed on-device or through a reviewed cloud-capable route. It integrates Firebase AI Logic, Gemini Nano on supported Chrome devices, Gemini 3.5 Flash-Lite in the cloud and Firebase App Check. A deterministic privacy policy blocks detected secret patterns on cloud-capable routes and redacts recognized email, phone and payment-card patterns. Users must consent and review the payload before inference. Unsigned receipts report the SDK source and SHA-256 digest of the full prompt.
 
-**Observed:** Hybrid-to-device, device-only and explicitly selected cloud-only have produced live receipts. Automatic fallback must be demonstrated separately before being claimed as observed. Pattern redaction is not complete anonymization; the receipts are not signed execution attestations.
+**Observed:** Hybrid-to-device, device-only, explicit cloud-only and controlled automatic hybrid fallback have produced live receipts. The controlled fallback uses a document Permissions Policy to restrict Prompt API access, while retaining Firebase PREFER_ON_DEVICE. Pattern redaction is not complete anonymization; the receipts are not signed execution attestations.
 
 **Built with:** Firebase AI Logic Web SDK, Firebase App Check, Gemini, JavaScript, Web Crypto, Node.js, Playwright, Vercel.
 
