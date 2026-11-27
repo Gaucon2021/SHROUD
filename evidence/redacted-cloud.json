@@ -1,0 +1,9 @@
+{
+  "schema": "shroud.inference.v1",
+  "route": "REVIEW_REDACTED_CLOUD",
+  "sha256": "2baf2893e270997e95336431c100e4d196d27a7ef6ff4d54cb09c48d4ef2a453",
+  "source": "IN_CLOUD",
+  "timestamp": "2026-11-27T03:11:41.591Z",
+  "appCheck": "TOKEN_OBTAINED_AT_CONNECT",
+  "limitations": "SDK-reported provenance and client-side hash; not signed or independently attested"
+}
