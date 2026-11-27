@@ -13,3 +13,7 @@ test("full-width email normalized and redacted",()=>{const r=prepare("ａｌｅ�
 test("JWT bearer token blocked",()=>assert.equal(prepare("Bearer abcdefgh.ijklmnop.qrstuvwx","hybrid",true).decision,"BLOCK"));
 test("private key marker blocked",()=>assert.equal(prepare("-----BEGIN PRIVATE KEY-----","hybrid",true).decision,"BLOCK"));
 test("GitHub token prefix blocked",()=>assert.equal(prepare("ghp_abcdefghijklmnop","hybrid",true).decision,"BLOCK"));
+
+test("invisible separator cannot bypass email redaction",()=>assert.equal(prepare("alex\u200b@example.com","hybrid",true).payload,"[REDACTED_EMAIL_1]"));
+test("invisible separator cannot bypass secret detection",()=>assert.equal(prepare("ghp_abc\u200bdefghijklmnop","hybrid",true).decision,"BLOCK"));
+test("device mode preserves original formatting",()=>assert.equal(prepare("a\u200bb","device",false).payload,"a\u200bb"));
