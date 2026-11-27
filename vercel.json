@@ -1,0 +1,19 @@
+{
+  "headers": [
+    {
+      "source": "/fallback-test",
+      "headers": [
+        {
+          "key": "Permissions-Policy",
+          "value": "language-model=()"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/fallback-test",
+      "destination": "/index.html"
+    }
+  ]
+}
