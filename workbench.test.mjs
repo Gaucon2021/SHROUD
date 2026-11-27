@@ -17,3 +17,7 @@ test("GitHub token prefix blocked",()=>assert.equal(prepare("ghp_abcdefghijklmno
 test("invisible separator cannot bypass email redaction",()=>assert.equal(prepare("alex\u200b@example.com","hybrid",true).payload,"[REDACTED_EMAIL_1]"));
 test("invisible separator cannot bypass secret detection",()=>assert.equal(prepare("ghp_abc\u200bdefghijklmnop","hybrid",true).decision,"BLOCK"));
 test("device mode preserves original formatting",()=>assert.equal(prepare("a\u200bb","device",false).payload,"a\u200bb"));
+
+test("cloud-only requires explicit consent",()=>assert.equal(prepare("alex@example.com","cloud",false).decision,"BLOCK"));
+test("cloud-only redacts and labels route separately",()=>{const r=prepare("alex@example.com 0912345678","cloud",true);assert.equal(r.decision,"REVIEW_REDACTED_CLOUD");assert.equal(r.payload,"[REDACTED_EMAIL_1] [REDACTED_PHONE_1]");});
+test("cloud-only blocks secrets",()=>assert.equal(prepare("api_key=abcdefghijk","cloud",true).decision,"BLOCK"));
