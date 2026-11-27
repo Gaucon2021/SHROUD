@@ -1,14 +1,21 @@
 # Acceptance gate — SHROUD
 
 ## Automated acceptance
+
 - Run `node --test`.
-- CI browser smoke: desktop 1440×900, mobile 390×844, sidebar, one visible page, no horizontal page overflow, no uncaught browser errors, core product flow. Browser test blocks external network; it does not verify third-party integration.
-- Production: verify exact deployed source and HTTP responses, then repeat manual product flow on the public domain.
+- Browser smoke: desktop 1440×900 and mobile 390×844, navigation, no horizontal page overflow, no uncaught errors, route consent gates, receipt export and invalidation. External calls are blocked or stubbed; this is not live AI verification.
+- [CI for cloud model fix](https://github.com/Gaucon2021/SHROUD/actions/runs/45932500646) passed.
 
-## Required live evidence (NOT VERIFIED until demonstrated)
-Real Firebase Spark project, enforced App Check, one actual device-only inference and one actual redacted hybrid inference, with verified source receipts. Never enter a Gemini secret or upgrade to Blaze.
+## Observed live evidence
 
-## Release criteria
-- GitHub Actions green for the exact release commit.
-- Manual visual review on desktop and mobile, real platform integration and independent evidence.
-- No paid infrastructure, no secret collection, no mainnet. Do not submit as complete while any live requirement is open.
+The owner configured Firebase Spark, Gemini Developer API and Fraud Defense App Check. The console showed Basic enforcement for Firebase AI Logic and a registered web app. The browser reported successful token acquisition and exported three successful inference receipts. See [evidence](../evidence/README.md).
+
+- Hybrid to on-device: observed.
+- Device-only to on-device: observed.
+- Explicit redacted cloud-only to cloud: observed.
+- Automatic hybrid fallback to cloud: not observed.
+- Network-level independent attestation: not provided.
+
+## Remaining release checks
+
+Capture automatic fallback on an environment without an available local model if required by the competition; record the exact route and actual source without substituting the cloud-only run. Complete the demo video and submission. Keep Spark, use synthetic inputs and never publish private credentials. Do not claim full PII detection or independently attested inference.
