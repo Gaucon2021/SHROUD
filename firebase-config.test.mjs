@@ -1,0 +1,10 @@
+import {test} from "node:test";
+import assert from "node:assert/strict";
+import {validatePublicConfig} from "./firebase-config.mjs";
+const config={apiKey:"AIza"+"A".repeat(35),projectId:"shroud-demo",appId:"1:123456:web:abc123",authDomain:"shroud-demo.firebaseapp.com"};
+const site="A".repeat(40);
+test("only required public fields forwarded",()=>assert.deepEqual(validatePublicConfig(config,site),{config:{apiKey:config.apiKey,projectId:config.projectId,appId:config.appId},siteKey:site}));
+test("private key field rejected",()=>assert.throws(()=>validatePublicConfig({...config,private_key:"synthetic"},site)));
+test("missing site key rejected",()=>assert.throws(()=>validatePublicConfig(config,"")));
+test("non-web app rejected",()=>assert.throws(()=>validatePublicConfig({...config,appId:"1:123:android:abc"},site)));
+test("invalid project rejected",()=>assert.throws(()=>validatePublicConfig({...config,projectId:"https://example.com"},site)));
