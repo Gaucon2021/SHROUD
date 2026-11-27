@@ -1,0 +1,9 @@
+{
+  "schema": "shroud.inference.v1",
+  "route": "DEVICE_ONLY",
+  "sha256": "6db6f2a0b33f2129e6a0b0fa9a354c5762848aa6dd84d0fb6d3458237fab5d74",
+  "source": "ON_DEVICE",
+  "timestamp": "2026-11-27T02:55:21.565Z",
+  "appCheck": "TOKEN_OBTAINED_AT_CONNECT",
+  "limitations": "SDK-reported provenance and client-side hash; not signed or independently attested"
+}
