@@ -1,16 +1,24 @@
+import {validatePublicConfig} from './firebase-config.mjs';
 import {confirmSource} from './runtime-policy.mjs';
 // Firebase JS SDK v12.14.0. No API or billing project is provisioned by this app.
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import {initializeAppCheck,ReCaptchaEnterpriseProvider} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app-check.js";
+import {initializeApp,deleteApp} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import {initializeAppCheck,ReCaptchaEnterpriseProvider,getToken} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app-check.js";
 import {getAI,getGenerativeModel,GoogleAIBackend,InferenceMode,InferenceSource} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-ai.js";
 let initialized;
-export function connect(config,siteKey) {
+export async function connect(config,siteKey) {
   if(initialized)throw new Error("Reload to change Firebase configuration.");
-  if(!config?.apiKey||!config?.projectId||!config?.appId||!siteKey)throw new Error("Public Firebase web config and App Check site key required.");
-  const app=initializeApp(config,"shroud");
-  initializeAppCheck(app,{provider:new ReCaptchaEnterpriseProvider(siteKey),isTokenAutoRefreshEnabled:true});
-  initialized=getAI(app,{backend:new GoogleAIBackend()});
-  return true;
+  const checked=validatePublicConfig(config,siteKey);
+  const app=initializeApp(checked.config,"shroud");
+  try {
+    const appCheck=initializeAppCheck(app,{provider:new ReCaptchaEnterpriseProvider(checked.siteKey),isTokenAutoRefreshEnabled:true});
+    const token=await getToken(appCheck);
+    if(!token||typeof token.token!=="string"||!token.token)throw Error("App Check attestation unavailable.");
+    initialized=getAI(app,{backend:new GoogleAIBackend()});
+    return {appCheck:"TOKEN_OBTAINED"};
+  } catch(error) {
+    await deleteApp(app).catch(()=>{});
+    throw new Error("App Check initialization or attestation failed. Check the registered web app, authorized domain and site key.");
+  }
 }
 export async function infer(payload,decision,progress) {
   if(!initialized)throw new Error("Connect Firebase first.");
