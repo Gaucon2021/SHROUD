@@ -25,7 +25,8 @@ export async function infer(payload,decision,progress) {
   if(!["DEVICE_ONLY","REVIEW_REDACTED","REVIEW_REDACTED_CLOUD"].includes(decision))throw new Error("Policy blocked.");
   const mode=decision==="DEVICE_ONLY"?InferenceMode.ONLY_ON_DEVICE:decision==="REVIEW_REDACTED_CLOUD"?InferenceMode.ONLY_IN_CLOUD:InferenceMode.PREFER_ON_DEVICE;
   if(typeof mode!=="string")throw Error("Requested SDK inference mode unavailable.");
-  const model=getGenerativeModel(initialized,{mode});
+  // Pin the supported no-billing cloud model instead of the retired SDK default.
+  const model=getGenerativeModel(initialized,decision==="DEVICE_ONLY"?{mode}:{mode,inCloudParams:{model:"gemini-3.5-flash-lite"}});
   if(decision!=="REVIEW_REDACTED_CLOUD"){
     const initialization=model.initializeDeviceModel(progress);
     if(decision==="DEVICE_ONLY")await initialization;
